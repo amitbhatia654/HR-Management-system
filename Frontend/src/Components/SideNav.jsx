@@ -43,7 +43,7 @@ export default function SideNav({ isOpen }) {
             className="search-box px-3 mt-4"
           />
           <div>
-            <h6 className="fw-light   my-4">Recruitment</h6>
+            <h6 className="fw-light my-4">Recruitment</h6>
             <Link
               to={"/candidates"}
               style={{

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 import SideImage from "../../images/frame29.png";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 
 import {
   Flex,
@@ -83,7 +84,7 @@ const LoginRegister = () => {
 
   return (
     <>
-      <h2 className="d-flex justify-content-center text-violet my-4">LOGO</h2>
+      <h2 className="d-flex justify-content-center text-violet my-4"> LOGO</h2>
       <div className="container login-container ">
         <div className="row   ">
           <div className="col-md-6 bg-violet side1 ">

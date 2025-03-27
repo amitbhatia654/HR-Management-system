@@ -1,6 +1,5 @@
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Main_dashBoard from "./pages/dashboard/Main_dashBoard";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Toaster } from "react-hot-toast";
 import Employee from "./pages/EmployeeManagement/Employee";
@@ -18,6 +17,10 @@ import MemberShipPlans from "./pages/MemberShipPlans";
 import Trainers from "./pages/Trainers";
 import MembersReport from "./pages/dashboard/MembersReport";
 import TrainersDetailsPage from "./pages/Trainers/TrainersDetails";
+import Candidates from "./pages/Candidates";
+import Employees from "./pages/Employees";
+import Attendance from "./pages/Attendance";
+import Leaves from "./pages/Leaves";
 
 function App() {
   const isUserLogin = () => {
@@ -57,40 +60,12 @@ function App() {
           }
         ></Route>
         <Route path="/" element={<PrivateRoute />}>
-          <Route path="candidates" element={<Main_dashBoard />} />
-          <Route path="users" element={<UserDetails />} />
-          <Route path="update-profile" element={<UpdateProfile />}></Route>
-          <Route path="employees" element={<Employee />}></Route>
-          <Route
-            path="members-report"
-            element={<MembersReport></MembersReport>}
-          ></Route>
-          <Route
-            path="active-members"
-            element={<JoinedMembers></JoinedMembers>}
-          ></Route>
-          <Route
-            path="inactive-members"
-            element={<InactiveMembers></InactiveMembers>}
-          ></Route>
-          <Route
-            path="member-details"
-            element={<MemberDetailsPage></MemberDetailsPage>}
-          ></Route>
-          <Route path="trainers" element={<Trainers />}></Route>
-          <Route
-            path="trainer-details"
-            element={<TrainersDetailsPage />}
-          ></Route>
-          <Route
-            path="membership-plans"
-            element={<h5>Membership Plans</h5>}
-          ></Route>
-          <Route path="gym-profile" element={<MyProfile></MyProfile>}></Route>
-          <Route
-            path="/add-new-employee"
-            element={<CreateEmployeeData />}
-          ></Route>
+          <Route path="candidates" element={<Candidates />} />
+          <Route path="employees" element={<Employees />} />
+
+          <Route path="attendance" element={<Attendance />} />
+
+          <Route path="leaves" element={<Leaves />} />
         </Route>
         <Route path="/*" element={<ErrorPage />}></Route>
       </Routes>

@@ -15,15 +15,17 @@ export default function Modal({
           {/* modal-dialog-centered" */}
           <div className="modal-content mymodal">
             <div className="modal-header">
-              <h5 className="modal-tit text-center">{title}</h5>
+              
+              <h5 className="modal-title text-center">{title}</h5>
               <button
                 type="button"
-                className="btn-close"
+                className="btn-close "
                 aria-label="Close"
                 onClick={() => {
                   setShowModal(false);
                 }}
               ></button>
+              
             </div>
             <div className="modal-body">{children}</div>
           </div>

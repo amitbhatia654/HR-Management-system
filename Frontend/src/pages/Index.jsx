@@ -79,7 +79,7 @@ export default function Index() {
           }}
         >
           <div
-            className="scrollable-container "
+            className="scrollable-conta "
             style={{
               minHeight: "91.7vh",
               maxHeight: "91.7vh",

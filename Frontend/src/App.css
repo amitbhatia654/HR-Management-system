@@ -32,17 +32,50 @@
     padding: 10px;
 }
 
-.logo-heading{
+.logo-heading {
     border-right: 1px solid grey;
 }
 
-.search-box{
+.search-box {
     border-radius: 20px;
     padding: 5px;
     border: 1px solid black;
-    
+
 }
 
+.filter-box {
+    width: 150px;
+}
+
+.modal-header {
+    background-color: #4D007D;
+    color: white;
+}
+
+
+
+body {
+    background-color: whitesmoke;
+}
+
+.add-btn {
+    background-color: #4D007D;
+    padding: 8px;
+    padding-left: 30px;
+    padding-right: 30px;
+    color: white;
+    border-radius: 30px;
+}
+
+.table-box {
+    box-shadow: 2px 3px 4px 2px rgb(192, 188, 188);
+    border-radius: 20px;
+}
+
+.filters {
+    border-radius: 40px !important;
+    height: 47px;
+}
 
 
 /* HTML: <div class="loader"></div> */
@@ -171,11 +204,22 @@
     border-radius: 20px;
 }
 
+.btn-close {
+    background-color: white;
+
+}
+
 .mymodal {
-    background-color: rgb(225, 226, 239);
-    box-shadow: 2px 2px 7px rgb(115, 115, 137);
+    /* background-color: rgb(225, 226, 239); */
+    box-shadow: 1px 2px 2px 2px rgb(222, 222, 239);
     color: blue !important;
+    /* color: white !important; */
     border-radius: 20px;
+}
+
+.modal-header {
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
 }
 
 .pic-form {
