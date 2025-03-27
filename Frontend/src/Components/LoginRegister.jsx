@@ -70,7 +70,7 @@ const LoginRegister = () => {
 
         setError("");
         toast.success(res.data.message);
-        navigate("/");
+        navigate("/candidates");
       } else {
         toast.success(res.data);
         resetForm({
@@ -121,6 +121,7 @@ const LoginRegister = () => {
                       p="1rem"
                       backgroundColor="whiteAlpha.700"
                       boxShadow="md"
+                      className=""
                     >
                       {type == "register" && (
                         <FormControl>

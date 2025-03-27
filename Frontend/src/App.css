@@ -28,13 +28,21 @@
 }
 
 .sidenav-full {
-    min-width: 210px;
-
+    min-width: 240px;
+    padding: 10px;
 }
 
-body {
-    background-color: #d9d9e0;
+.logo-heading{
+    border-right: 1px solid grey;
 }
+
+.search-box{
+    border-radius: 20px;
+    padding: 5px;
+    border: 1px solid black;
+    
+}
+
 
 
 /* HTML: <div class="loader"></div> */

@@ -27,7 +27,7 @@ function App() {
   // eslint-disable-next-line react/prop-types
   const ProtectedLoginRoute = ({ children }) => {
     if (isUserLogin()) {
-      return <Navigate to="/" replace></Navigate>;
+      return <Navigate to="/candidates" replace></Navigate>;
     }
     return children;
   };
@@ -57,11 +57,10 @@ function App() {
           }
         ></Route>
         <Route path="/" element={<PrivateRoute />}>
-          <Route index element={<Main_dashBoard></Main_dashBoard>}></Route>
-          <Route path="users" element={<UserDetails />}></Route>
+          <Route path="candidates" element={<Main_dashBoard />} />
+          <Route path="users" element={<UserDetails />} />
           <Route path="update-profile" element={<UpdateProfile />}></Route>
           <Route path="employees" element={<Employee />}></Route>
-
           <Route
             path="members-report"
             element={<MembersReport></MembersReport>}
@@ -70,29 +69,23 @@ function App() {
             path="active-members"
             element={<JoinedMembers></JoinedMembers>}
           ></Route>
-
           <Route
             path="inactive-members"
             element={<InactiveMembers></InactiveMembers>}
           ></Route>
-
           <Route
             path="member-details"
             element={<MemberDetailsPage></MemberDetailsPage>}
           ></Route>
-
           <Route path="trainers" element={<Trainers />}></Route>
-
           <Route
             path="trainer-details"
             element={<TrainersDetailsPage />}
           ></Route>
-
           <Route
             path="membership-plans"
             element={<h5>Membership Plans</h5>}
           ></Route>
-
           <Route path="gym-profile" element={<MyProfile></MyProfile>}></Route>
           <Route
             path="/add-new-employee"
