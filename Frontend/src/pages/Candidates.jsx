@@ -1,5 +1,4 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -13,41 +12,20 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useNavigate } from "react-router-dom";
-import DeleteIcon from "@mui/icons-material/Delete";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
 import toast from "react-hot-toast";
-// import axiosInstance from "../../ApiManager";
-// import noResult from "../../../../images/no-results3.jpeg";
 import noResult from "../../images/no-results3.jpeg";
 import { useSelector } from "react-redux";
 import axiosInstance from "../ApiManager";
 import { useState } from "react";
 import Modal from "./HelperPages/Modal";
 import { Formik, ErrorMessage, Form } from "formik";
-// import axiosInstance from "../ApiManager";
-const dp_image = "/user.jpg";
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-// import toast from "react-hot-toast";
 import { addMember } from "../assets/FormSchema";
-// import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Pagination from "./HelperPages/Pagination";
-// import { useNavigate } from "react-router-dom";
-import {
-  formatDateToDisplay,
-  formatDateToInput,
-} from ".././assets/FrontendCommonFunctions";
 import ConfirmModal from "./HelperPages/ConfirmModal";
-import moment from "moment";
 import { Button } from "@mui/material";
 import { useEffect } from "react";
 
 export default function Candidates() {
-  const [age, setAge] = useState("");
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
+  const [status, setStatus] = useState("");
   const [allemployee, setAllEmployee] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -58,21 +36,22 @@ export default function Candidates() {
   const [showModal, setShowModal] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [editMember, setEditMember] = useState({});
+  const [confirmModalData, setConfirmModalData] = useState({
+    open: false,
+    answer: "",
+  });
 
   const [allMembers, setAllMembers] = useState([]);
-  const [allTrainers, setAllTrainers] = useState([]);
   const navigate = useNavigate();
-  const totalPages = Math.ceil(totalCount / rowSize);
   const user = useSelector((state) => state.cart);
 
   const fetchData = async () => {
     setLoading(true);
-    const res = await axiosInstance.get("/api/employee", {
-      params: { search, rowSize, currentPage, _id: user.id },
+    const res = await axiosInstance.get("/api/auth/employee", {
+      params: { search, status, _id: user.id },
     });
     if (res.status == 200) {
       setAllEmployee(res.data.response);
-      setTotalCount(res.data.totalCount);
     } else {
       setAllEmployee([]);
       setTotalCount(0);
@@ -80,16 +59,19 @@ export default function Candidates() {
     setLoading(false);
   };
 
-  const handleEdit = (id) => {
-    navigate("/add-new-employee", { state: { id } });
-  };
+  
 
-  const handleDelete = async (id) => {
-    const res = await axiosInstance.delete(`/api/employee/${id}`);
+  const handleDelete = async (empId) => {
+    // console.log(memberId);
+    const userResponse = await showConfirmationModal();
+    if (userResponse != "yes") return;
+    const res = await axiosInstance.delete(`/api/auth/employee/${empId}`);
     if (res.status == 200) {
       toast.success(res.data.message);
-      setAllEmployee(allemployee.filter((data) => data._id != id));
-    }
+
+      const updatedEmp = allemployee.filter((emp) => emp._id !== empId);
+      setAllEmployee(updatedEmp);
+    } else toast.error(res.data.message);
   };
 
   function convertFileToBase64(file) {
@@ -103,10 +85,11 @@ export default function Candidates() {
 
   const handleSubmit = async (values) => {
     // return console.log(values, "values");
-    // setSubmitLoading(true);
+    setSubmitLoading(true);
 
     var data = {
       ...values,
+      status: "new",
     };
 
     if (values?.resume?.name) {
@@ -114,66 +97,32 @@ export default function Candidates() {
       data.resume = base64;
     }
 
-    return console.log(data, "data is");
+    const res = await axiosInstance.post(`/api/auth/employee`, data);
+    console.log(res, "res");
 
-    const res = await axiosInstance.post(`/api/gym/member`, data);
-
+    // return console.log(data, "data is");
     setSubmitLoading(false);
     if (res.status == 200) {
-      if (editMember._id) {
-        if (res.data.memberResult.status == "active") {
-          const updatedMember = allMembers.map((folder) => {
-            if (folder._id == values._id) {
-              return res.data.memberResult;
-            }
-            return folder;
-          });
-          setAllMembers(updatedMember);
-        } else {
-          const updatedMembers = allMembers.filter(
-            (member) => member._id !== res.data.memberResult._id
-          );
-          setAllMembers(updatedMembers);
-        }
-      } else {
-        if (
-          allMembers.length < rowSize &&
-          res.data.memberResult.status == "active"
-        )
-          allMembers.push(res.data.memberResult);
-        else {
-          const updatedMembers = allMembers.filter(
-            (member) => member._id !== res.data.memberResult._id
-          );
-          setAllMembers(updatedMembers);
-        }
-      }
+      allemployee.push(res.data.Res);
       toast.success(res.data.message);
-      setEditMember({});
       setShowModal(false);
     }
   };
 
-  const deleteMember = async (memberId) => {
-    // console.log(memberId);
-    const userResponse = await showConfirmationModal();
-    if (userResponse != "yes") return;
-    const res = await axiosInstance.delete(`/api/gym/member`, {
-      data: { memberId },
+  const showConfirmationModal = () => {
+    return new Promise((resolve) => {
+      setConfirmModalData({
+        open: true,
+        onClose: (answer) => {
+          resolve(answer);
+        },
+      });
     });
-    if (res.status == 200) {
-      toast.success(res.data.message);
-
-      const updatedMembers = allMembers.filter(
-        (member) => member._id !== memberId
-      );
-      setAllMembers(updatedMembers);
-    } else toast.error(res.data.message);
   };
 
   useEffect(() => {
     fetchData();
-  }, [search, rowSize, currentPage]);
+  }, [search, status]);
 
   return (
     <div>
@@ -185,14 +134,16 @@ export default function Candidates() {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
+                value={status}
                 label="Age"
-                onChange={handleChange}
+                onChange={(e) => setStatus(e.target.value)}
                 className="filters"
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={"new"}>new</MenuItem>
+                <MenuItem value={"scheduled"}>scheduled</MenuItem>
+                <MenuItem value={"ongoing"}>ongoing</MenuItem>
+                <MenuItem value={"selected"}>selected</MenuItem>
+                <MenuItem value={"rejected"}>rejected</MenuItem>
               </Select>
             </FormControl>
           </div>
@@ -203,9 +154,9 @@ export default function Candidates() {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
+                // value={age}
                 label="Age"
-                onChange={handleChange}
+                // onChange={handleChange}
                 className="filters"
               >
                 <MenuItem value={10}>Ten</MenuItem>
@@ -221,6 +172,9 @@ export default function Candidates() {
               type="text"
               placeholder="Search"
               className="search-box px-3"
+              onChange={(e) => {
+                setSearch(e.target.value), setStatus("");
+              }}
             />
             <div>
               <button
@@ -275,6 +229,7 @@ export default function Candidates() {
                     }}
                   >
                     <div className="loader"></div>
+                    {console.log(allemployee, "aall")}
                   </div>
                 </TableCell>
               ) : allemployee.length > 0 ? (
@@ -283,37 +238,51 @@ export default function Candidates() {
                     <TableCell
                       style={{ boxShadow: "0px 2px 4px rgba(0 ,0 ,0 ,0.2)" }}
                     >
-                      {(currentPage - 1) * rowSize + index + 1}
+                      {index + 1}
                     </TableCell>
                     <TableCell
                       style={{ boxShadow: "0px 2px 4px rgba(0 ,0 ,0 ,0.2)" }}
                     >
-                      {row?.empName}
+                      {row?.name}
                     </TableCell>
                     <TableCell
                       style={{ boxShadow: "0px 2px 4px rgba(0 ,0 ,0 ,0.2)" }}
                     >
-                      {row?.empEmail}
+                      {row?.email_address}
                     </TableCell>
                     <TableCell
                       style={{ boxShadow: "0px 2px 4px rgba(0 ,0 ,0 ,0.2)" }}
                     >
-                      {row?.empPhone}
+                      {row?.phone_number}
                     </TableCell>
                     <TableCell
                       style={{ boxShadow: "0px 2px 4px rgba(0 ,0 ,0 ,0.2)" }}
                     >
-                      {row?.empPhone}
+                      {row?.position}
                     </TableCell>
                     <TableCell
                       style={{ boxShadow: "0px 2px 4px rgba(0 ,0 ,0 ,0.2)" }}
                     >
-                      {row?.empDepartment}
+                      {/* {row?.status} */}
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={row.status}
+                        label="Age"
+                        onChange={(e) => setStatus(e.target.value)}
+                        className="filters"
+                      >
+                        <MenuItem value={"new"}>new</MenuItem>
+                        <MenuItem value={"scheduled"}>scheduled</MenuItem>
+                        <MenuItem value={"ongoing"}>ongoing</MenuItem>
+                        <MenuItem value={"selected"}>selected</MenuItem>
+                        <MenuItem value={"rejected"}>rejected</MenuItem>
+                      </Select>
                     </TableCell>
                     <TableCell
                       style={{ boxShadow: "0px 2px 4px rgba(0 ,0 ,0 ,0.2)" }}
                     >
-                      {row?.empAddress}
+                      {row?.experience}
                     </TableCell>
                     <TableCell
                       style={{ boxShadow: "0px 2px 4px rgba(0 ,0 ,0 ,0.2)" }}
@@ -343,7 +312,7 @@ export default function Candidates() {
                           <li>
                             <button
                               className="dropdown-item"
-                              //   onClick={() => deleteMember(member._id)}
+                              onClick={() => handleDelete(row._id)}
                             >
                               Delete Candidate
                             </button>
@@ -399,7 +368,7 @@ export default function Candidates() {
                   }
                 : {
                     name: "",
-                    address: "",
+                    email_address: "",
                     phone_number: "",
                     position: "",
                     experience: "",
@@ -438,19 +407,19 @@ export default function Candidates() {
 
                       <div className="col-md-6 ">
                         <div className="form-group">
-                          <label htmlFor="address">Email Address</label>
+                          <label htmlFor="email_address">Email Address</label>
                           <input
                             type="text"
                             className="form-control"
-                            id="address"
+                            id="email_address"
                             placeholder="Email Address"
-                            value={props.values.address}
-                            name="address"
+                            value={props.values.email_address}
+                            name="email_address"
                             onChange={props.handleChange}
                           />
                         </div>
                         <ErrorMessage
-                          name="address"
+                          name="email_address"
                           component="div"
                           style={{ color: "red" }}
                         />
@@ -583,6 +552,14 @@ export default function Candidates() {
             )}
           </Formik>
         </Modal>
+      )}
+
+      {confirmModalData.open && (
+        <ConfirmModal
+          title={"Are You Sure You Want to Delete"}
+          setConfirmModalData={setConfirmModalData}
+          onClose={confirmModalData.onClose}
+        ></ConfirmModal>
       )}
     </div>
   );

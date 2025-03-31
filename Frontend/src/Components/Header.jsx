@@ -45,7 +45,9 @@ export default function Header() {
           }}
           className="text-violet"
         >
-          <span style={{ textTransform: "capitalize" }}>{page}</span>
+          <span style={{ textTransform: "capitalize" }}>
+            {page || "Candidate"}
+          </span>
         </div>
 
         <div className="d-flex justify-content-end w-100">
@@ -74,13 +76,7 @@ export default function Header() {
           <div className="">
             <Tooltip title="Gym Profile" placement="bottom-end">
               <IconButton onClick={handleOpenUserMenu}>
-                <img
-                  alt="User Image"
-                  src={userData.profilePic}
-                  className=""
-                  style={{ height: "40px", width: "40px", borderRadius: "50%" }}
-                />
-                {/* <Avatar></Avatar> */}
+                <Avatar></Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -99,12 +95,7 @@ export default function Header() {
               onClose={handleCloseUserMenu}
             >
               <MenuItem onClick={handleCloseUserMenu}>
-                <Typography
-                  textAlign="center"
-                  onClick={() => {
-                    navigate("/gym-profile");
-                  }}
-                >
+                <Typography textAlign="center">
                   <AccountBoxIcon className="mx-2" />
                   Profile
                 </Typography>

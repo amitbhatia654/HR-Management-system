@@ -60,7 +60,7 @@ function App() {
           }
         ></Route>
         <Route path="/" element={<PrivateRoute />}>
-          <Route path="candidates" element={<Candidates />} />
+          <Route index element={<Candidates />} />
           <Route path="employees" element={<Employees />} />
 
           <Route path="attendance" element={<Attendance />} />

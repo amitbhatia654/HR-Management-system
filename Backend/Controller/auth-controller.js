@@ -24,32 +24,35 @@ const login = async (req, res) => {
 const AddEmployee = async (req, res) => {
 
     try {
-        const { empName, empEmail, empPhone, empDepartment, empAddress, _id } = req.body
-        console.log(req.body, 'body')
-        const Res = await Employee.create({ empName, empPhone, empEmail, empDepartment, empAddress, createdBy: _id })
-        res.status(200).send("New Member Added Succesfully")
+
+        // const { empName, empEmail, empPhone, empDepartment, empAddress, _id } = req.body
+        console.log(req.loginUser._id, 'body')
+        const Res = await Employee.create({ ...req.body, createdBy: req.loginUser._id })
+        res.status(200).json({ message: "New Member Added Succesfully", Res })
+        console.log(Res, 'res')
     } catch (error) {
         console.log('Add Employee error', error)
     }
 }
 
-
 const getAllEmployee = async (req, res) => {
     try {
-        let search = req.query.search
-        let rowSize = parseInt(req.query.rowSize) || 6;
-        let page = parseInt(req.query.currentPage) || 1; // Default to page 1
-        let skip = (page - 1) * rowSize;
+        const search = req.query.search
+        const status = req.query.status
+
         const createdBy = req.query._id
+        // const query = search
+        //     ? { createdBy, name: { $regex: search, $options: "i" } }
+        //     : { createdBy };
 
-        const query = search
-            ? { createdBy, empName: { $regex: search, $options: "i" } }
-            : { createdBy };
+        const query = {
+            createdBy,
+            ...(search && { name: { $regex: search, $options: "i" } }),
+            ...(status && { status })
+        };
 
-        const response = await Employee.find(query).skip(skip).limit(rowSize)
-        const totalCount = await Employee.countDocuments(query);
-
-        res.status(200).json({ response, totalCount })
+        const response = await Employee.find(query)
+        res.status(200).json({ response })
 
     } catch (error) {
         res.status(205).send("data not found")

@@ -45,14 +45,12 @@ export default function SideNav({ isOpen }) {
           <div>
             <h6 className="fw-light my-4">Recruitment</h6>
             <Link
-              to={"/candidates"}
+              to={"/"}
               style={{
                 textDecoration: "none",
                 textTransform: "capitalize",
                 fontSize: "16px",
-                color: `${
-                  location.pathname == "/candidates" ? "blue" : "black"
-                }`,
+                color: `${location.pathname == "/" ? "blue" : "black"}`,
               }}
             >
               <Box

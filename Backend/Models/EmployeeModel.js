@@ -1,24 +1,29 @@
 const mongoose = require("mongoose")
 
 const EmployeeSchema = new mongoose.Schema({
-    empName: {
+    name: {
         type: String, require: true
     },
-    empEmail: {
+    email_address: {
         type: String, require: true
     },
-    empPhone: {
+    phone_number: {
         type: Number, require: true
     },
-    empDepartment: {
+    position: {
         type: String, require: true
     },
-    empAddress: {
-        type: String, require: true
-    },
-    createdBy: {
+    experience: {
         type: String, require: true
     }
+    ,
+    resume: {
+        type: String, require: true
+    },
+    status: {
+        type: String, require: true
+    },
+    createdBy: { type: mongoose.Schema.Types.ObjectId }
 })
 
 const Employee = new mongoose.model("Employee", EmployeeSchema)

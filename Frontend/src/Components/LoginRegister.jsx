@@ -71,7 +71,7 @@ const LoginRegister = () => {
 
         setError("");
         toast.success(res.data.message);
-        navigate("/candidates");
+        navigate("/");
       } else {
         toast.success(res.data);
         resetForm({
